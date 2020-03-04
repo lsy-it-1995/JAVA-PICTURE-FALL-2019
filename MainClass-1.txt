@@ -1,0 +1,253 @@
+class ListNode {
+    Object data;
+    ListNode next;
+    ListNode(Object o){
+        data = o;
+        next = null;
+    }
+}
+class LinkListEnumeration implements  java.util.Enumeration {
+    ListNode head;
+    public LinkListEnumeration(LinkListEnumeration h){
+        head = h.head;
+    }
+
+    public boolean hasMoreElements() {
+        return head!=null;
+    }
+
+    public Object nextElement() {
+        Object o = head.data;
+        head = head.next;
+        return o;
+    }
+}
+
+
+class Picture {
+    ListNode head;
+
+    Picture() {
+    }
+
+    void add(Shape sh) {
+        ListNode newNode = new ListNode(sh);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    void drawALL() {
+        ListNode tempHead = head;
+        while (tempHead != null) {
+            Shape s = (Shape) tempHead.data;
+            if (s.name.contains("Circle")) {
+                ((Circle) s).draw();
+            } else if (s.name.contains("Square")) {
+                ((Square) s).draw();
+            } else if (s.name.contains("Rectangle")) {
+                ((Rectangle) s).draw();
+            } else if (s.name.contains("Triangle")) {
+                ((Triangle) s).draw();
+            }
+            tempHead = tempHead.next;
+        }
+    }
+
+    double totaleArea() {
+        ListNode tempHead = head;
+        double sum_area = 0;
+        while (tempHead != null) {
+            Shape s = (Shape) tempHead.data;
+            sum_area += s.area();
+            tempHead = tempHead.next;
+        }
+        return sum_area;
+    }
+
+    void printShapes() {
+        ListNode tempHead = head;
+
+        while (tempHead != null) {
+            Shape s = (Shape) tempHead.data;
+            if (s.name.contains("Circle")) {
+                System.out.println(s.name + ": radius: " + ((Circle) s).radius);
+            } else if (s.name.contains("Square")) {
+                System.out.println(s.name + ": side: " + ((Square) s).len);
+            } else if (s.name.contains("Rectangle")) {
+                System.out.println(s.name + ": height: " + ((Rectangle) s).Rec_len + " widht: " + ((Rectangle) s).Rec_Width);
+            } else if (s.name.contains("Triangle")) {
+                System.out.println(s.name + ": height: " + ((Triangle) s).myHeight + " base: " + ((Triangle) s).myBase);
+            }
+            tempHead = tempHead.next;
+        }
+    }
+}
+class Rectangle extends Square {
+    int Rec_Width;
+    int Rec_len;
+
+    Rectangle(String name, int r_w, int r_len) {
+        super(name, r_len);
+        Rec_Width = r_w;
+        Rec_len = r_len;
+    }
+
+    public double area() {
+        return Rec_len * Rec_Width;
+    }
+
+    public void draw() {
+        for (int i = 0; i < Rec_len; i++) {
+            System.out.print("* ");
+        }
+        System.out.println();
+        for (int i = 0; i < Rec_Width - 2; i++) {
+            System.out.print("* ");
+            for (int j = 0; j < Rec_len - 2; j++) {
+                System.out.print("  ");
+            }
+            System.out.print("*");
+            System.out.println();
+        }
+        for (int i = 0; i < Rec_len; i++) {
+            System.out.print("* ");
+        }
+        System.out.println();
+    }
+}
+class Square extends  Shape {
+    int len;
+
+    Square(String name, int l) {
+        super(name);
+        len = l;
+    }
+
+    public double area() {
+        return len * len;
+    }
+
+    public void draw() {
+        for (int i = 0; i < len; i++) {
+            System.out.print("* ");
+        }
+        System.out.println();
+        for (int i = 0; i < len - 2; i++) {
+            System.out.print("*");
+            for (int j = 0; j < len - 2; j++) {
+                System.out.print("  ");
+            }
+            System.out.print(" *");
+            System.out.println();
+        }
+        for (int i = 0; i < len; i++) {
+            System.out.print("* ");
+        }
+        System.out.println();
+    }
+}
+class Circle extends Shape {
+    double radius;
+
+    Circle(String name, int r) {
+        super(name);
+        radius = r;
+    }
+
+    public double area() {
+        return 3.14 * radius;
+    }
+
+    public void draw() {
+	for(double i = -radius; i <= radius; i++){
+		for(double j = -radius; j<= radius; j++){
+			double d = ((i*2)/radius)*((i*2)/radius) + (j/radius)*(j/radius);
+			if(d>0.95 && d<1.08){
+				System.out.print("*");
+			}else{
+				System.out.print(" ");
+			}
+		}
+		System.out.println();
+	}	    
+    }
+}
+class Triangle extends Shape {
+    int myHeight, myBase;
+    Triangle(String name, int h, int b){
+        super(name);
+        myHeight = h;
+        myBase = b;
+    }
+    public double area(){
+        return myHeight*myBase/2;
+    }
+
+    public void draw(){
+        for(int i = 0; i < myHeight; i++){
+            for(int j = 0; j <=i ; j++){
+                if(i == myHeight - 1){
+                    System.out.print("* ");
+                }else if(j == 0 || j == i)
+                    System.out.print("* ");
+                else
+                    System.out.print("  ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+class Shape {
+    String name;
+
+    Shape(String newName) {
+        this.name = newName;
+    }
+
+    double area() {
+        if (this.name.contains("Circle")) {
+            return ((Circle) this).area();
+        } else if (this.name.contains("Square")) {
+            return ((Square) this).area();
+        } else if (this.name.contains("Rectangle")) {
+            return ((Rectangle) this).area();
+        } else if (this.name.contains("Triangle")) {
+            return ((Triangle) this).area();
+        }
+        return 0.0;
+    }
+
+    void draw() {
+        if (this.name.contains("Circle")) {
+            ((Circle) this).draw();
+        } else if (this.name.contains("Square")) {
+            ((Square) this).draw();
+        } else if (this.name.contains("Rectangle")) {
+            ((Rectangle) this).draw();
+        } else if (this.name.contains("Triangle")) {
+            ((Triangle) this).draw();
+        }
+    }
+}
+public class MainClass {
+    static void println(double d){
+        System.out.println("Double d is " + d);
+    }
+    public static void main(String[] args){
+        Picture p = new Picture();
+        p.add(new Triangle("FirstTriangle", 5, 5));
+        p.add(new Triangle("SecondTriangle", 4, 3));
+        p.add(new Circle("FirstCircle", 5));
+        p.add(new Circle("SecondCircle", 10));
+        p.add(new Square("FirstSquare", 5));
+        p.add(new Square("SecondSquare", 10));
+        p.add(new Rectangle("FirstRectangle",8,4));
+        p.add(new Rectangle("SecondRectangle",4,8));
+        p.printShapes();
+        println(p.totaleArea());
+        p.drawALL();
+
+    }
+}
+
